@@ -120,8 +120,13 @@ let tableForm = $ref({
 
 // <!-- ————————————————————————————————————————方法—————————————————————————————————————— -->
 const handleQueryName =()=>{
-  if(queryInput.length>0){
-    tableData = tableData.filter(item=>(item.name).toLowerCase().match(queryInput.toLowerCase()))
+  // if(queryInput.length>0){
+  //   tableData = tableData.filter(item=>(item.name).toLowerCase().match(queryInput.toLowerCase()))
+  // }else{
+  //   tableData = tableDataCopy
+  // }
+  if (queryInput.length>0){
+    tableData = tableData.filter((tableData.name).toLowerCase().match(queryInput.toLowerCase()))
   }else{
     tableData = tableDataCopy
   }
@@ -129,23 +134,28 @@ const handleQueryName =()=>{
 
 // 多删除
 const handleDelList = () => {
+  // 方法1（这个方法得搭配单删事件的方法1）
   // multipleSelection.value.forEach(id=>{
   //   handRowdelect({id})
   // })
   // multipleSelection.value=[]
   // 遍历多选列表的ID，然后调用单删的方法进行删除，最后记得吧多选ID列表清空
-  multipleSelection.forEach(id => {
-    handRowdelect({ id })
+  // 方法2（这是搭配单删事件的方法2）
+  multipleSelection.forEach(item=>{
+    handRowdelect(item)
   })
   multipleSelection = []
 }
 // 单删
-const handRowdelect = ({ id }) => {
-  // let index = tableData.value.findIndex(item => item.id === id)
-  // tableData.value.splice(index, 1)
-  let index = tableData.findIndex(item => item.id === id)
-  tableData.splice(index, 1)
+const handRowdelect = (row) => {
+  // 方法1
+  // const handRowdelect = ({id}) => {
+  //   let index = tableData.value.findIndex(item => item.id === id)
+  //   tableData.value.splice(index, 1)}
+  let index = tableData.findIndex(item=>item.id ===row.id)
+  tableData.splice(index,1)
 }
+
 const handleSelectionChange = (val) => {
   // multipleSelection.value = []
   // val.forEach(item => {
@@ -153,35 +163,51 @@ const handleSelectionChange = (val) => {
   // });
   // 多选删除，先将ID清空，然后将获取每个值的ID，然后将ID放入多选列表中
   multipleSelection = []
-  val.forEach(item => {
-    multipleSelection.push(item.id)
-  });
+  val.forEach(item=>{
+    multipleSelection.push(item)
+  })
 }
 
 const handleAdd = () => {
+  // dialogFormVisible = true
+  // tableForm = {}
+  // dialogType = 'add'
   dialogFormVisible = true
-  tableForm = {}
   dialogType = 'add'
+  tableForm = {}
 }
 
 const handRowEdit = (row) => {
   // dialogFormVisible.value = true
   // dialogType.value = 'edit'
   // tableForm.value = { ...row }
-  dialogFormVisible=true
-  dialogType='edit'
-  tableForm={...row}
+  // 方法2
+  dialogFormVisible = true
+  dialogType = 'edit'
+  tableForm = row
 
 }
 
 const dialogconfirm = () => {
-  if (dialogType=='add') {
+  // 方法1
+  // if (dialogType=='add') {
+  //   tableData.push({
+  //     id: (tableData.length + 1).toString(),
+  //     ...tableForm
+  //   })
+  // }else{
+  //   let index = tableData.findIndex(item=>item.id===tableForm.id)
+  //   tableData[index] = tableForm
+  // }
+  // dialogFormVisible = false
+  // 方法2
+  if (dialogType == "add"){
     tableData.push({
-      id: (tableData.length + 1).toString(),
+      id:(tableData.length+1).toString(),
       ...tableForm
     })
   }else{
-    let index = tableData.findIndex(item=>item.id===tableForm.id)
+    let index = tableData.findIndex(item=>item ===tableForm)
     tableData[index] = tableForm
   }
   dialogFormVisible = false
